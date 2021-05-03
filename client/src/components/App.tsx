@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
+import GameLine from './GameLine';
 
-interface Game {
-	id: number
-	name: string
-	number: number
-}
+import { Game } from './types'
 
 interface InitialState {
 	games: Game[],
@@ -37,6 +34,7 @@ function App () {
 	
 	const [addingGameName, setAddingGameName] = useState('')
 	const [addingGameNumber, setAddingGameNumber] = useState(1000)
+	const [day, setDay] = useState(0)
 
 	const addGame = (e: any) => {
 		e.preventDefault()
@@ -59,6 +57,24 @@ function App () {
 		setGames(gameUpdate)
 	}
 
+	const incDay = () => {
+		if (day === 6) return
+		setDay(day + 1)
+	}
+
+	const decDay = () => {
+		if (day === 0) return
+		setDay(day - 1)
+	}
+
+	const proxySetDay = (val: number | string) => {
+		const value = Number(val)
+		if (isNaN(value) || value < 0 || value > 6) return
+		setDay(value)
+	}
+
+	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
   return (
     <div className="App">
 			<form
@@ -78,28 +94,57 @@ function App () {
 				/>
 				<input 
 					type="submit"
+					value='Add Game'
  				/>
 			</form>
-			<ul>
-				{
-					games.map((each: Game) => 
-						<li>
-							<strong>
-								{ each.number }
-							</strong>
-							 - {each.name}
-							<button
-								onClick={() => removeGame(each.id)}
+			<p>{days[day%7]}</p>
+			<div>
+				<button onClick={decDay}>Previous Day</button>
+				<input 
+					type='number' 
+					value={day}
+					onChange={(e: any) => proxySetDay(e.target.value)} 
+				/>
+				<button onClick={incDay}>Next Day</button>
+			</div>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+				}}
+			>
+				<ul
+					style={{
+						textAlign: 'left',
+						margin: '0 auto',
+						border: '1px dashed tomato',
+					}}
+				>
+					{
+						games.map((each: Game) => 
+							<li
+								key={each.id}
 							>
-								X
-							</button>
-						</li>
-					)
-				}
-			</ul>
+								<strong>
+									{ each.number }
+								</strong>
+								- {each.name}
+								<button
+									onClick={() => removeGame(each.id)}
+								>
+									X
+								</button>
+							</li>
+						)
+					}
+				</ul>
+			</div>
 			<div>
 				<p>New Count</p>
-				
+				<GameLine 
+					games={games} 
+					day={day}
+				/>
 			</div>
     </div>
   );
