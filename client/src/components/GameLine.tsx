@@ -10,6 +10,7 @@ import {
 	seriesDataUpdateAM,
 	seriesDataUpdatePM,
 	seriesDataUpdateSales,
+	seriesUpdateSlot,
 } from './Actions'
 
 import Context from './Context'
@@ -26,6 +27,7 @@ const GameLine: React.FC<Props> = ({
 	const { state, dispatch } = useContext(Context)
 
 	const data = state.series[idx].data
+	const slot = state.series[idx].slot
 
 	const { am, pm, add, sales } = data[state.day]
 
@@ -33,6 +35,12 @@ const GameLine: React.FC<Props> = ({
 		<tr>
 			<td>
 				{idx}
+				<input 
+					type='number' 
+					placeholder='slot number (set 0 for no slot)'
+					value={slot}
+					onChange={((e: any) => dispatch(seriesUpdateSlot(idx, e.target.value)))}
+				/>
 				<select
 					value={gameId}
 					onChange={(e: any) => dispatch(gameChangeCard(state.series, idx, e.target.value))}

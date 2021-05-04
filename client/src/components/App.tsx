@@ -56,6 +56,7 @@ const App: React.FC = () => {
 					<p>New Count</p>
 					<table>
 						<tr>
+							<th>Slot Number</th>
 							<th>Game</th>
 							<th>AM Count</th>
 							<th>Additions</th>

@@ -13,10 +13,11 @@ const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
 		case ContextAction.DAY_INCREMENT: return reduceDayInc(state, action)
 		case ContextAction.DAY_DECREMENT: return reduceDayDec(state, action)
 		case ContextAction.SERIES_ADD_ONE: return reduceSeriesAddOne(state, action)
-		case ContextAction.SERIES_DATA_UPDATE_AM: return reducerSeriesDataUpdateAM(state, action)
-		case ContextAction.SERIES_DATA_UPDATE_PM: return reducerSeriesDataUpdatePM(state, action)
-		case ContextAction.SERIES_DATA_UPDATE_SALES: return reducerSeriesDataUpdateSales(state, action)
-		case ContextAction.SERIES_DATA_UPDATE_ADDITIONS: return reducerSeriesDataUpdateAdditions(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_AM: return reduceSeriesDataUpdateAM(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_PM: return reduceSeriesDataUpdatePM(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_SALES: return reduceSeriesDataUpdateSales(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_ADDITIONS: return reduceSeriesDataUpdateAdditions(state, action)
+		case ContextAction.SERIES_SLOT_UPDATE: return reduceSeriesSlotUpdate(state, action)
 		default: return state
 	}
 }
@@ -70,7 +71,18 @@ function reduceSeriesAddOne (state: ContextStateType, action: ContextActionType)
 	}
 }
 
-function reducerSeriesDataUpdateAM (state: ContextStateType, action: ContextActionType): ContextStateType {
+function reduceSeriesSlotUpdate (state: ContextStateType, action: ContextActionType): ContextStateType {
+	const { seriesIdx, value } = action.payload
+	if (isNaN(value) || value < 0 || value > 16) return state
+	const series = [...state.series]
+	series[seriesIdx].slot = value
+	return {
+		...state,
+		series
+	}
+}
+
+function reduceSeriesDataUpdateAM (state: ContextStateType, action: ContextActionType): ContextStateType {
 	const { seriesIdx, value } = action.payload
 	const series = [...state.series]
 	const updateData = [...state.series[seriesIdx].data]
@@ -82,7 +94,7 @@ function reducerSeriesDataUpdateAM (state: ContextStateType, action: ContextActi
 	}
 }
 
-function reducerSeriesDataUpdatePM (state: ContextStateType, action: ContextActionType): ContextStateType {
+function reduceSeriesDataUpdatePM (state: ContextStateType, action: ContextActionType): ContextStateType {
 	const { seriesIdx, value } = action.payload
 	const series = [...state.series]
 	const updateData = [...state.series[seriesIdx].data]
@@ -94,7 +106,7 @@ function reducerSeriesDataUpdatePM (state: ContextStateType, action: ContextActi
 	}
 }
 
-function reducerSeriesDataUpdateSales (state: ContextStateType, action: ContextActionType): ContextStateType {
+function reduceSeriesDataUpdateSales (state: ContextStateType, action: ContextActionType): ContextStateType {
 	const { seriesIdx, value } = action.payload
 	const series = [...state.series]
 	const updateData = [...state.series[seriesIdx].data]
@@ -106,7 +118,7 @@ function reducerSeriesDataUpdateSales (state: ContextStateType, action: ContextA
 	}
 }
 
-function reducerSeriesDataUpdateAdditions (state: ContextStateType, action: ContextActionType): ContextStateType {
+function reduceSeriesDataUpdateAdditions (state: ContextStateType, action: ContextActionType): ContextStateType {
 	const { seriesIdx, value } = action.payload
 	const series = [...state.series]
 	const updateData = [...state.series[seriesIdx].data]

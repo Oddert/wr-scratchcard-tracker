@@ -95,6 +95,16 @@ export const seriesAddOne = (gameId: number, fromDay?: number, toDay?: number, s
 	}
 }
 
+export const seriesUpdateSlot = (seriesIdx: number | string, slot: number | string) => {
+	return {
+		type: ContextAction.SERIES_SLOT_UPDATE,
+		payload: {
+			seriesIdx,
+			value: Number(slot)
+		}
+	}
+}
+
 export const seriesDataUpdateAM = (seriesIdx: number | string, value: number | string) => {
 	return {
 		type: ContextAction.SERIES_DATA_UPDATE_AM,
