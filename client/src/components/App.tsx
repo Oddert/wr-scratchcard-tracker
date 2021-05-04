@@ -67,8 +67,6 @@ const App: React.FC = () => {
 								state.series.map((each: Series, idx: number) => 
 									<GameLine 
 										key={idx}
-										games={state.games} 
-										day={state.day}
 										gameId={each.gameId}
 										idx={idx}
 									/>

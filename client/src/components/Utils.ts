@@ -1,8 +1,19 @@
 
 import {
 	ContextStateType,
+	DayState,
 	// ContextActionType,
 } from './types'
+
+export const initialDayState: DayState[] = [
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+	{ am: 0, add: 0, pm: 0, sales: 0 },
+]
 
 export const initialContextState: ContextStateType = {
 	games: [
@@ -23,8 +34,8 @@ export const initialContextState: ContextStateType = {
 		{ id: 1, day: 'Monday', date: new Date(),  },
 	],
 	series: [
-		{ gameId: 0, fromDay: 0, toDay: 6, slot: 1 }, 
-		{ gameId: 1, fromDay: 0, toDay: 6, slot: 2 },
+		{ gameId: 0, fromDay: 0, toDay: 6, slot: 1, data: initialDayState }, 
+		{ gameId: 1, fromDay: 0, toDay: 6, slot: 2, data: initialDayState },
 	],
 	day: 0,
 	days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],

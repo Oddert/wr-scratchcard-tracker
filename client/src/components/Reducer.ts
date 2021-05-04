@@ -13,6 +13,10 @@ const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
 		case ContextAction.DAY_INCREMENT: return reduceDayInc(state, action)
 		case ContextAction.DAY_DECREMENT: return reduceDayDec(state, action)
 		case ContextAction.SERIES_ADD_ONE: return reduceSeriesAddOne(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_AM: return reducerSeriesDataUpdateAM(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_PM: return reducerSeriesDataUpdatePM(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_SALES: return reducerSeriesDataUpdateSales(state, action)
+		case ContextAction.SERIES_DATA_UPDATE_ADDITIONS: return reducerSeriesDataUpdateAdditions(state, action)
 		default: return state
 	}
 }
@@ -63,6 +67,54 @@ function reduceSeriesAddOne (state: ContextStateType, action: ContextActionType)
 			...state.series,
 			action.payload
 		]
+	}
+}
+
+function reducerSeriesDataUpdateAM (state: ContextStateType, action: ContextActionType): ContextStateType {
+	const { seriesIdx, value } = action.payload
+	const series = [...state.series]
+	const updateData = [...state.series[seriesIdx].data]
+	updateData[state.day] = { ...updateData[state.day], am: value }
+	series[seriesIdx].data = updateData
+	return {
+		...state,
+		series
+	}
+}
+
+function reducerSeriesDataUpdatePM (state: ContextStateType, action: ContextActionType): ContextStateType {
+	const { seriesIdx, value } = action.payload
+	const series = [...state.series]
+	const updateData = [...state.series[seriesIdx].data]
+	updateData[state.day] = { ...updateData[state.day], pm: value }
+	series[seriesIdx].data = updateData
+	return {
+		...state,
+		series
+	}
+}
+
+function reducerSeriesDataUpdateSales (state: ContextStateType, action: ContextActionType): ContextStateType {
+	const { seriesIdx, value } = action.payload
+	const series = [...state.series]
+	const updateData = [...state.series[seriesIdx].data]
+	updateData[state.day] = { ...updateData[state.day], sales: value }
+	series[seriesIdx].data = updateData
+	return {
+		...state,
+		series
+	}
+}
+
+function reducerSeriesDataUpdateAdditions (state: ContextStateType, action: ContextActionType): ContextStateType {
+	const { seriesIdx, value } = action.payload
+	const series = [...state.series]
+	const updateData = [...state.series[seriesIdx].data]
+	updateData[state.day] = { ...updateData[state.day], add: value }
+	series[seriesIdx].data = updateData
+	return {
+		...state,
+		series
 	}
 }
 

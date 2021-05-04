@@ -4,6 +4,8 @@ import {
 	ContextAction,
 } from './types'
 
+import { initialDayState } from './Utils'
+
 export const gameAddOne = (games: Game[], name: string, number: number, price: number) => {
 	const accept = games.reduce((acc, each) => {
 		if (String(each.number) === String(number)) return false
@@ -85,9 +87,50 @@ export const seriesAddOne = (gameId: number, fromDay?: number, toDay?: number, s
 		fromDay: fromDay || 0,
 		toDay: toDay || 6,
 		slot: slot || 0,
+		data: initialDayState
 	}
 	return {
 		type: ContextAction.SERIES_ADD_ONE,
 		payload: createSeries
+	}
+}
+
+export const seriesDataUpdateAM = (seriesIdx: number | string, value: number | string) => {
+	return {
+		type: ContextAction.SERIES_DATA_UPDATE_AM,
+		payload: {
+			seriesIdx,
+			value: Number(value),
+		}
+	}
+}
+
+export const seriesDataUpdatePM = (seriesIdx: number | string, value: number | string) => {
+	return {
+		type: ContextAction.SERIES_DATA_UPDATE_PM,
+		payload: {
+			seriesIdx,
+			value: Number(value),
+		}
+	}
+}
+
+export const seriesDataUpdateSales = (seriesIdx: number | string, value: number | string) => {
+	return {
+		type: ContextAction.SERIES_DATA_UPDATE_SALES,
+		payload: {
+			seriesIdx,
+			value: Number(value),
+		}
+	}
+}
+
+export const seriesDataUpdateAdditions = (seriesIdx: number | string, value: number | string) => {
+	return {
+		type: ContextAction.SERIES_DATA_UPDATE_ADDITIONS,
+		payload: {
+			seriesIdx,
+			value: Number(value),
+		}
 	}
 }

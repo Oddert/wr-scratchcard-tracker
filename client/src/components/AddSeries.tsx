@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 
-import { Game, Series } from './types'
-
+import { Game } from './types'
 import { seriesAddOne } from './Actions'
 import Context from './Context'
 
