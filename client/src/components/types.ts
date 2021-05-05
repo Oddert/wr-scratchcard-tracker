@@ -14,7 +14,7 @@ export interface Count {
 	date: Date
 }
 
-export interface DayState {
+export interface SeriesData {
 	am: number
 	add?: number
 	pm: number
@@ -26,7 +26,7 @@ export interface Series {
 	fromDay: number
 	toDay: number
 	slot: number
-	data: DayState[]
+	data: SeriesData[]
 }
 
 export interface ContextStateType {

@@ -4,7 +4,7 @@ import {
 	ContextAction,
 } from './types'
 
-import { initialDayState } from './Utils'
+import { initialSeriesData } from './Utils'
 
 export const gameAddOne = (games: Game[], name: string, number: number, price: number) => {
 	const accept = games.reduce((acc, each) => {
@@ -87,7 +87,7 @@ export const seriesAddOne = (gameId: number, fromDay?: number, toDay?: number, s
 		fromDay: fromDay || 0,
 		toDay: toDay || 6,
 		slot: slot || 0,
-		data: initialDayState
+		data: initialSeriesData
 	}
 	return {
 		type: ContextAction.SERIES_ADD_ONE,

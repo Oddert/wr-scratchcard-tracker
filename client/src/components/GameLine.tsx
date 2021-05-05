@@ -41,6 +41,8 @@ const GameLine: React.FC<Props> = ({
 					value={slot}
 					onChange={((e: any) => dispatch(seriesUpdateSlot(idx, e.target.value)))}
 				/>
+				</td>
+				<td>
 				<select
 					value={gameId}
 					onChange={(e: any) => dispatch(gameChangeCard(state.series, idx, e.target.value))}

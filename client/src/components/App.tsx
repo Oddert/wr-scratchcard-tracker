@@ -9,6 +9,7 @@ import GameLine from './GameLine'
 import AddSeries from './AddSeries'
 import DayControls from './DayControls'
 import CardList from './CardList'
+import Graphs from './Graphs'
 
 import {
 	initialContextState,
@@ -37,7 +38,7 @@ const App: React.FC = () => {
 					display: 'flex',
 					background: '#333',
 					color: '#ecf0f1',
-					height: '100vh',
+					minHeight: '100vh',
 				}}
 			>
 				<div>
@@ -55,14 +56,16 @@ const App: React.FC = () => {
 					<DayControls />
 					<p>New Count</p>
 					<table>
-						<tr>
-							<th>Slot Number</th>
-							<th>Game</th>
-							<th>AM Count</th>
-							<th>Additions</th>
-							<th>PM Count</th>
-							<th>Sales (VBS)</th>
-						</tr>
+						<thead>
+							<tr>
+								<th>Slot Number</th>
+								<th>Game</th>
+								<th>AM Count</th>
+								<th>Additions</th>
+								<th>PM Count</th>
+								<th>Sales (VBS)</th>
+							</tr>
+						</thead>
 						<tbody>
 							{
 								state.series.map((each: Series, idx: number) => 
@@ -76,6 +79,7 @@ const App: React.FC = () => {
 						</tbody>
 					</table>
 					<AddSeries />
+					<Graphs />
 				</div>
 			</div>
 		</Context.Provider>
