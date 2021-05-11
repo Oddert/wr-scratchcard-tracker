@@ -18,6 +18,7 @@ const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
 		case ContextAction.SERIES_DATA_UPDATE_SALES: return reduceSeriesDataUpdateSales(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_ADDITIONS: return reduceSeriesDataUpdateAdditions(state, action)
 		case ContextAction.SERIES_SLOT_UPDATE: return reduceSeriesSlotUpdate(state, action)
+		case ContextAction.UI_SET_SERIES: return reducerUiSetSeries(state, action)
 		default: return state
 	}
 }
@@ -130,4 +131,16 @@ function reduceSeriesDataUpdateAdditions (state: ContextStateType, action: Conte
 	}
 }
 
+function reducerUiSetSeries (state: ContextStateType, action: ContextActionType): ContextStateType {
+	return {
+		...state,
+		ui: {
+			...state.ui,
+			seriesActive: {
+				...state.ui.seriesActive,
+				[action.payload.key]: action.payload.value
+			},
+		}
+	}
+}
 export default ContextReducer

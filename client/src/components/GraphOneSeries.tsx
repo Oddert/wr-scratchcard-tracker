@@ -26,6 +26,8 @@ enum DataSetEnum {
 	SET_SALES_DATA = 'SET_SALES_DATA',
 	SET_DAILY_EXPECTED_DATA = 'SET_DAILY_EXPECTED_DATA',
 	SET_CUMULATIVE_EXPECTED_DATA = 'SET_CUMULATIVE_EXPECTED_DATA',
+	SET_DAILY_DISCREPANCY_DATA = 'SET_DAILY_DISCREPANCY_DATA',
+	SET_CUMULATIVE_DISCREPANCY_DATA = 'SET_CUMULATIVE_DISCREPANCY_DATA',
 }
 
 interface OneSeriesPoint {
@@ -39,6 +41,8 @@ interface DataSetState {
 	salesData: OneSeriesPoint[]
 	dailyExpectedData: OneSeriesPoint[]
 	cumulativeExpectedData: OneSeriesPoint[]
+	dailyDiscrepancyData: OneSeriesPoint[]
+	cumulativeDiscrepancyData: OneSeriesPoint[]
 }
 
 interface DataSetAction { 
@@ -50,7 +54,9 @@ const dataSetInitialState: DataSetState = {
 	parsedData: [],
 	salesData: [],
 	dailyExpectedData: [],
-	cumulativeExpectedData: []
+	cumulativeExpectedData: [],
+	dailyDiscrepancyData: [],
+	cumulativeDiscrepancyData: [],
 }
 
 function dataSetReducer (state: DataSetState, action: DataSetAction): DataSetState {
@@ -75,6 +81,16 @@ function dataSetReducer (state: DataSetState, action: DataSetAction): DataSetSta
 				...state,
 				cumulativeExpectedData: action.payload
 			}
+		case DataSetEnum.SET_DAILY_DISCREPANCY_DATA:
+			return {
+				...state,
+				dailyDiscrepancyData: action.payload
+			}
+		case DataSetEnum.SET_CUMULATIVE_DISCREPANCY_DATA:
+			return {
+				...state,
+				cumulativeDiscrepancyData: action.payload
+			}
 		default:
 			return state
 	}
@@ -89,18 +105,26 @@ const GraphOneSeries: React.FC<Props> = ({
 
 	// swap out for a controler later
 	const INCLUDE_CD = false
-	const SHOW_SALES = false
-	const SHOW_DAILY_EXPECTED = false
-	const SHOW_CUMULATIVE_EXPECTED = true
 
 	const [dataSets, dispatch] = useReducer(dataSetReducer, dataSetInitialState)
 	const [hintValue, setHintValue]: [OneSeriesPoint | null, any] = useState(null)
+
 	const { state }: { state: ContextStateType } = useContext(Context)
+	const { ui: { seriesActive, selectedColours } } = state
 	const { games, days } = state
 	const series = state.series[seriesIdx]
 	const { data, gameId } = series
 	const game = games.find((game: Game) => game.id === gameId)
+	const colours = selectedColours
 
+	const SHOW_SALES = seriesActive.sales
+	const SHOW_COUNT = seriesActive.count
+	const SHOW_DAILY_EXPECTED = seriesActive.dailyExpected
+	const SHOW_DAILY_DISCREP = seriesActive.dailyDiscrepancy
+	const SHOW_CUMULATIVE_EXPECTED = seriesActive.cumulativeExpected
+	const SHOW_CUMULATIVE_DISCREP = seriesActive.cumulativeDiscrepancy
+
+	// Count
 	useEffect(() => {
 		const parsedData: OneSeriesPoint[] = data.reduce((acc: any, each: SeriesData, dayIdx: number) => {
 			let cd = false
@@ -129,6 +153,8 @@ const GraphOneSeries: React.FC<Props> = ({
 		// eslint-disable-next-line
 	}, [data, days, INCLUDE_CD])
 
+
+	// Sales
 	useEffect(() => {
 		const salesData: OneSeriesPoint[] = data.reduce((acc: OneSeriesPoint[], each: SeriesData, dayIdx: number) => {
 			const price = game ? game.price : 1
@@ -143,37 +169,33 @@ const GraphOneSeries: React.FC<Props> = ({
 		})
 	}, [data, days, game])
 
-	useEffect(() => {
-		const dailyExpectedData: OneSeriesPoint[] = data.reduce((acc: OneSeriesPoint[], each: SeriesData, dayIdx: number) => {
-			const price = game ? game.price : 1
-			const numberOfSales = each.sales / price
-			return [
-				...acc, 
-				point(days[dayIdx], 'am', each.am, (dayIdx * STEP), 'Expected Number: '),
-				point(days[dayIdx], 'pm', each.am + Number(each.add) - numberOfSales, (dayIdx * STEP) + 2, 'Expected Number: '),
-			]
-		}, [])
-		dispatch({
-			type: DataSetEnum.SET_DAILY_EXPECTED_DATA,
-			payload: dailyExpectedData
-		})
-	}, [data, days, game])
 
+	// Cumulative Expected
 	useEffect(() => {
-		const price = game ? game.price : 1
+
+		const price: number = game ? game.price : 1
 		let prevDay: SeriesData = data[0]
-		const cumulativeExpectedData = []
+		const cumulativeExpectedData: OneSeriesPoint[] = []
+
 		for (let dayIdx = 0; dayIdx < data.length; dayIdx++) {
 			if (dayIdx === 0) {
-				const numberOfSales = data[0].sales / price
-				cumulativeExpectedData.push(point(days[dayIdx], 'am', data[0].am, (dayIdx * STEP), 'Expected Number: '))
-				cumulativeExpectedData.push(point(days[dayIdx], 'pm', data[0].am + Number(data[0].add) - numberOfSales, (dayIdx * STEP) + 2, 'Expected Number: '))
+				const today: SeriesData = data[0]
+				const numberOfSales = today.sales / price
+				const am = today.am
+				const pm = today.am + Number(today.add) - numberOfSales
+				cumulativeExpectedData.push(point(days[dayIdx], 'am', am, (dayIdx * STEP), 'Cumulative Expected Number: '))
+				cumulativeExpectedData.push(point(days[dayIdx], 'pm', pm, (dayIdx * STEP) + 2, 'Cumulative Expected Number: '))
+				prevDay = today
 			} else {
 				const today = data[dayIdx]
 				const numberOfSales = today.sales / price
-				cumulativeExpectedData.push(point(days[dayIdx], 'am', prevDay.pm, (dayIdx * STEP), 'Expected Number: '))
-				cumulativeExpectedData.push(point(days[dayIdx], 'pm', prevDay.pm + Number(today.add) - numberOfSales, (dayIdx * STEP) + 2, 'Expected Number: '))
-				prevDay = { ...today, am: prevDay.pm, pm: prevDay.pm + Number(today.add) - numberOfSales }
+				// WARNING: previous day (am) on sheet references that last ACTUAL count, prevDay here is the previous discrepancy count
+				// migrate this away from referencing itself 
+				const am = prevDay.pm
+				const pm = prevDay.pm + Number(today.add) - numberOfSales
+				cumulativeExpectedData.push(point(days[dayIdx], 'am', am, (dayIdx * STEP), 'Cumulative Expected Number: '))
+				cumulativeExpectedData.push(point(days[dayIdx], 'pm', pm, (dayIdx * STEP) + 2, 'Cumulative Expected Number: '))
+				prevDay = { ...today, am, pm }
 			}
 		}
 		console.log(cumulativeExpectedData)
@@ -184,12 +206,112 @@ const GraphOneSeries: React.FC<Props> = ({
 	}, [data, days, game])
 
 
-	function createOneSeriesPoint (dataPoint: SeriesData, dayIdx: number, time: 'am' | 'pm', contextLabel?: string): OneSeriesPoint {
+	// Daily Expected
+	useEffect(() => {
+
+		const dailyExpectedData: OneSeriesPoint[] = []
+		let prevDay: SeriesData = data[0]
+
+		for (let dayIdx = 0; dayIdx < data.length; dayIdx ++) {
+			const today: SeriesData = data[dayIdx]
+			const price = game ? game.price : 1
+			const numberOfSales = today.sales / price
+
+			if (dayIdx === 0) {
+				dailyExpectedData.push(point(days[dayIdx], 'am', today.am, (dayIdx * STEP), 'Daily Expected Number: '))
+				dailyExpectedData.push(point(days[dayIdx], 'pm', today.am + Number(today.add) - numberOfSales, (dayIdx * STEP) + 2, 'Daily Expected Number: '))
+			} else {
+				dailyExpectedData.push(point(days[dayIdx], 'am', prevDay.pm, (dayIdx * STEP), 'Daily Expected Number: '))
+				dailyExpectedData.push(point(days[dayIdx], 'pm', prevDay.pm + Number(today.add) - numberOfSales, (dayIdx * STEP) + 2, 'Daily Expected Number: '))
+				prevDay = today
+			}
+		}
+
+		dispatch({
+			type: DataSetEnum.SET_DAILY_EXPECTED_DATA,
+			payload: dailyExpectedData
+		})
+	}, [data, days, game])
+
+
+	// Daily Discrepancy
+	useEffect(() => {
+
+		const dailyDiscrepancyData: OneSeriesPoint[] = []
+		let prevDay: SeriesData = data[0]
+
+		for (let dayIdx = 0; dayIdx < data.length; dayIdx ++) {
+			const today: SeriesData = data[dayIdx]
+			const price: number = game ? game.price : 1
+			const numberOfSales: number = today.sales / price
+
+			if (dayIdx === 0) {
+				dailyDiscrepancyData.push(point(days[dayIdx], 'am', 0, (dayIdx * STEP), 'Daily Expected Number: '))
+				dailyDiscrepancyData.push(point(days[dayIdx], 'pm', (today.am + Number(today.add) - numberOfSales) - today.pm, (dayIdx * STEP) + 2, 'Daily Expected Number: '))
+			} else {
+				dailyDiscrepancyData.push(point(days[dayIdx], 'am', prevDay.pm - today.am, (dayIdx * STEP), 'Daily Expected Number: '))
+				dailyDiscrepancyData.push(point(days[dayIdx], 'pm', (prevDay.pm + Number(today.add) - numberOfSales) - today.pm, (dayIdx * STEP) + 2, 'Daily Expected Number: '))
+				prevDay = today
+			}
+		}
+
+		dispatch({
+			type: DataSetEnum.SET_DAILY_DISCREPANCY_DATA,
+			payload: dailyDiscrepancyData
+		})
+	}, [data, days, game])
+
+
+	// Cumulative Discrepancy
+	useEffect(() => {
+		const cumulativeDiscrepancyData: OneSeriesPoint[] = []
+		let prevDay: SeriesData = data[0]
+		let discrepancy: number = 0
+
+		for (let dayIdx = 0; dayIdx < data.length; dayIdx ++) {
+			const today: SeriesData = data[dayIdx]
+			const price: number = game ? game.price : 1
+			const numberOfSales: number = today.sales / price
+
+			let pmDiscrepancy: number
+
+			if (dayIdx === 0) {
+				pmDiscrepancy = (today.am + Number(today.add) - numberOfSales) - today.pm
+			} else {
+				pmDiscrepancy = (prevDay.pm + Number(today.add) - numberOfSales) - today.pm
+				prevDay = today
+			}
+
+			discrepancy += pmDiscrepancy
+			cumulativeDiscrepancyData.push(point(days[dayIdx], 'pm', discrepancy, (dayIdx * STEP) + 2, 'Cumulative Discrepancy: '))
+		}
+
+		dispatch({
+			type: DataSetEnum.SET_CUMULATIVE_DISCREPANCY_DATA,
+			payload: cumulativeDiscrepancyData
+		})
+
+	}, [data, days, game])
+
+
+
+	function createOneSeriesPoint (
+		dataPoint: SeriesData, 
+		dayIdx: number, 
+		time: 'am' | 'pm', 
+		contextLabel?: string
+	): OneSeriesPoint {
 		const offset = time === 'am' ? 0 : 2
 		return point(days[dayIdx], time, dataPoint[time], (dayIdx * STEP) + offset, contextLabel)
 	}
 
-	function point (day: string, time: 'am' | 'pm' | 'change demand' | 'pm sales', value: number, x: number, contextLabel?: string) {
+	function point (
+		day: string, 
+		time: 'am' | 'pm' | 'change demand' | 'pm sales', 
+		value: number, 
+		x: number, 
+		contextLabel?: string
+	) {
 		return { 
 			label: `${contextLabel || ''} ${day} ${time}`.trim(),
 			y: value,
@@ -238,27 +360,49 @@ const GraphOneSeries: React.FC<Props> = ({
 					SHOW_DAILY_EXPECTED && 
 					<LineSeries 
 						data={dataSets.dailyExpectedData}
+						color={colours.dailyExpected}
 					/>
 				}
 				{
 					SHOW_CUMULATIVE_EXPECTED &&
 					<LineSeries 
 						data={dataSets.cumulativeExpectedData}
+						color={colours.cumulativeExpected}
+					/>
+				}
+				{
+					SHOW_CUMULATIVE_DISCREP &&
+					<LineSeries 
+						data={dataSets.cumulativeDiscrepancyData}
+						color={colours.cumulativeDiscrepancy}
 					/>
 				}
 				{ 
 					SHOW_SALES && 
 					<LineSeries 
 						data={dataSets.salesData}
+						color={colours.sales}
 					/>
 				}
-				<LineSeries 
-					data={dataSets.parsedData}
-				/>
+				{ 
+					SHOW_DAILY_DISCREP && 
+					<LineSeries 
+						data={dataSets.dailyDiscrepancyData}
+						color={colours.dailyDiscrepancy}
+					/>
+				}
+				{
+					SHOW_COUNT &&
+					<LineSeries 
+						data={dataSets.parsedData}
+						color={colours.count}
+					/>
+				}
 				{
 					SHOW_DAILY_EXPECTED &&
 					<MarkSeries 
 						data={dataSets.dailyExpectedData}
+						color={colours.dailyExpected}
 						onValueMouseOver={handleMarkMouseOver}
 					/>
 				}
@@ -266,6 +410,15 @@ const GraphOneSeries: React.FC<Props> = ({
 					SHOW_CUMULATIVE_EXPECTED &&
 					<MarkSeries 
 						data={dataSets.cumulativeExpectedData}
+						color={colours.cumulativeExpected}
+						onValueMouseOver={handleMarkMouseOver}
+					/>
+				}
+				{
+					SHOW_CUMULATIVE_DISCREP &&
+					<MarkSeries 
+						data={dataSets.cumulativeDiscrepancyData}
+						color={colours.cumulativeDiscrepancy}
 						onValueMouseOver={handleMarkMouseOver}
 					/>
 				}
@@ -273,13 +426,26 @@ const GraphOneSeries: React.FC<Props> = ({
 					SHOW_SALES && 
 					<MarkSeries 
 						data={dataSets.salesData}
+						color={colours.sales}
 						onValueMouseOver={handleMarkMouseOver}
 					/>
 				}
-				<MarkSeries 
-					data={dataSets.parsedData}
-					onValueMouseOver={handleMarkMouseOver}
-				/>
+				{ 
+					SHOW_DAILY_DISCREP && 
+					<MarkSeries 
+						data={dataSets.dailyDiscrepancyData}
+						color={colours.dailyDiscrepancy}
+						onValueMouseOver={handleMarkMouseOver}
+					/>
+				}
+				{
+					SHOW_COUNT &&
+					<MarkSeries 
+						data={dataSets.parsedData}
+						color={colours.count}
+						onValueMouseOver={handleMarkMouseOver}
+					/>
+				}
 				{
 					(hintValue !== null) && 
 					<Hint 

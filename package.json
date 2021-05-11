@@ -1,0 +1,20 @@
+{
+  "name": "wr-scratchcard-tracker",
+  "version": "1.0.0",
+  "description": "An application for auto reconciling scratchcard discrepancies",
+  "main": "index.js",
+  "scripts": {
+		"dev": "cd client && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oddert/wr-scratchcard-tracker.git"
+  },
+  "author": "Robyn Felicity Heather Veitch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Oddert/wr-scratchcard-tracker/issues"
+  },
+  "homepage": "https://github.com/Oddert/wr-scratchcard-tracker#readme"
+}

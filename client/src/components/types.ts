@@ -29,12 +29,37 @@ export interface Series {
 	data: SeriesData[]
 }
 
+export interface ColourSets {
+	sales: string
+	count: string
+	dailyExpected: string
+	dailyDiscrepancy: string
+	cumulativeExpected: string
+	cumulativeDiscrepancy: string
+}
+
+export interface UIStateType {
+	seriesActive: {
+		count: Boolean
+		sales: Boolean
+		dailyExpected: Boolean
+		dailyDiscrepancy: Boolean
+		cumulativeExpected: Boolean 	
+		cumulativeDiscrepancy: Boolean
+	}
+	colourSets: {
+		default: ColourSets
+	}
+	selectedColours: ColourSets
+}
+
 export interface ContextStateType {
 	games: Game[]
 	counts: Count[]
 	series: Series[]
 	day: number
 	days: OneDay[]
+	ui: UIStateType
 }
 
 export enum ContextAction {
@@ -53,6 +78,8 @@ export enum ContextAction {
 	SERIES_DATA_UPDATE_PM = 'SERIES_DATA_UPDATE_PM',
 	SERIES_DATA_UPDATE_ADDITIONS = 'SERIES_DATA_UPDATE_ADDITIONS',
 	SERIES_DATA_UPDATE_SALES = 'SERIES_DATA_UPDATE_SALES',
+
+	UI_SET_SERIES = 'UI_SET_SERIES',
 }
 
 export interface ContextActionType {

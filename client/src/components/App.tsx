@@ -36,8 +36,6 @@ const App: React.FC = () => {
 				className="App"
 				style={{
 					display: 'flex',
-					background: '#333',
-					color: '#ecf0f1',
 					minHeight: '100vh',
 				}}
 			>
