@@ -82,6 +82,7 @@ export const initialContextState: ContextStateType = {
 			cumulativeExpected: '#fbbc04',
 			cumulativeDiscrepancy: 'purple',
 		},
+		crosshairPosition: 8,
 	},
 	games: [
 		{ id: 0, number: 1256, name: 'Mono Mill', price: 5 },

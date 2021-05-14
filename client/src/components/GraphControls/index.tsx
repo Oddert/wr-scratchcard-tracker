@@ -24,8 +24,9 @@ const GraphControls: React.FC<Props> = () => {
 				}}
 			>
 				{
-					Object.keys(state.ui.seriesActive).map((series: any) => 
+					Object.keys(state.ui.seriesActive).map((series: any, idx: any) => 
 						<Toggle 
+							key={idx}
 							seriesSwitch={series}
 						/>
 					)

@@ -1,4 +1,13 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { css, jsx } from '@emotion/react'
+import React, { 
+	CSSProperties, 
+	useContext, 
+	useEffect,
+	useReducer, 
+	useState 
+} from 'react'
 
 import {
 	XYPlot,
@@ -8,7 +17,11 @@ import {
 	HorizontalGridLines,
 	XAxis,
 	YAxis,
+	Crosshair,
 } from 'react-vis'
+
+
+import { crosshairPositionSet, crosshairReset } from './Actions'
 import Context from './Context'
 
 import {
@@ -96,6 +109,15 @@ function dataSetReducer (state: DataSetState, action: DataSetAction): DataSetSta
 	}
 }
 
+interface CrosshairValue {
+	count?: OneSeriesPoint
+	sales?: OneSeriesPoint
+	dailyExpected?: OneSeriesPoint
+	dailyDiscrepancy?: OneSeriesPoint
+	cumulativeExpected?: OneSeriesPoint
+	cumulativeDiscrepancy?: OneSeriesPoint
+}
+
 const GraphOneSeries: React.FC<Props> = ({
 	seriesIdx,
 }) => {
@@ -106,14 +128,17 @@ const GraphOneSeries: React.FC<Props> = ({
 	// swap out for a controler later
 	const INCLUDE_CD = false
 
-	const [dataSets, dispatch] = useReducer(dataSetReducer, dataSetInitialState)
+	const [dataSets, localDispatch]: [DataSetState, any] = useReducer(dataSetReducer, dataSetInitialState)
 	const [hintValue, setHintValue]: [OneSeriesPoint | null, any] = useState(null)
+	const [crosshairValue, setCrosshairValue]: [CrosshairValue | null, any] = useState(null)
+	const { state, dispatch }: { state: ContextStateType, dispatch: any } = useContext(Context)
 
-	const { state }: { state: ContextStateType } = useContext(Context)
-	const { ui: { seriesActive, selectedColours } } = state
+	const { ui: { seriesActive, selectedColours, crosshairPosition } } = state
 	const { games, days } = state
+
 	const series = state.series[seriesIdx]
 	const { data, gameId } = series
+
 	const game = games.find((game: Game) => game.id === gameId)
 	const colours = selectedColours
 
@@ -123,6 +148,46 @@ const GraphOneSeries: React.FC<Props> = ({
 	const SHOW_DAILY_DISCREP = seriesActive.dailyDiscrepancy
 	const SHOW_CUMULATIVE_EXPECTED = seriesActive.cumulativeExpected
 	const SHOW_CUMULATIVE_DISCREP = seriesActive.cumulativeDiscrepancy
+
+	const tooltip: CSSProperties = {
+		textAlign: 'left',
+		// background: '#ecf0f1',
+		// color: '#333',
+		fontSize: '12px',
+		padding: '6px',
+		borderRadius: '5px',
+		pointerEvents: 'none',
+		boxShadow: '5px 5px 5px rgba(0,0,0,.3)',
+		background: '#3A3A48',
+		margin: '5px',
+		boxSizing: 'border-box',
+	}
+
+	// const tooltipStyle = css`
+	// 	text-align: left;
+	// 	font-size: 12px;
+	// 	padding: 6px;
+	// 	border-radius: 5px;
+	// 	pointer-events: none;
+	// 	box-shadow: 5px 5px 5px rgba(0,0,0,.3);
+	// 	background: #3A3A48;
+	// 	margin: 5px;
+	// 	boxSizing: border-box;
+	// `
+
+const tooltipStyle = css({
+		textAlign: 'left',
+		// background: '#ecf0f1',
+		// color: '#333',
+		fontSize: '12px',
+		padding: '6px',
+		borderRadius: '5px',
+		pointerEvents: 'none',
+		boxShadow: '5px 5px 5px rgba(0,0,0,.3)',
+		background: '#3A3A48',
+		margin: '5px',
+		boxSizing: 'border-box',
+})
 
 	// Count
 	useEffect(() => {
@@ -145,7 +210,7 @@ const GraphOneSeries: React.FC<Props> = ({
 				]
 			}
 		}, [])
-		dispatch({
+		localDispatch({
 			type: DataSetEnum.SET_PARSED_DATA,
 			payload: parsedData
 		})
@@ -163,7 +228,7 @@ const GraphOneSeries: React.FC<Props> = ({
 				point(days[dayIdx], 'pm sales', each.sales / price, (dayIdx * STEP) + 2)
 			]
 		}, [])
-		dispatch({
+		localDispatch({
 			type: DataSetEnum.SET_SALES_DATA,
 			payload: salesData
 		})
@@ -189,8 +254,6 @@ const GraphOneSeries: React.FC<Props> = ({
 			} else {
 				const today = data[dayIdx]
 				const numberOfSales = today.sales / price
-				// WARNING: previous day (am) on sheet references that last ACTUAL count, prevDay here is the previous discrepancy count
-				// migrate this away from referencing itself 
 				const am = prevDay.pm
 				const pm = prevDay.pm + Number(today.add) - numberOfSales
 				cumulativeExpectedData.push(point(days[dayIdx], 'am', am, (dayIdx * STEP), 'Cumulative Expected Number: '))
@@ -199,7 +262,7 @@ const GraphOneSeries: React.FC<Props> = ({
 			}
 		}
 		console.log(cumulativeExpectedData)
-		dispatch({
+		localDispatch({
 			type: DataSetEnum.SET_CUMULATIVE_EXPECTED_DATA,
 			payload: cumulativeExpectedData
 		})
@@ -227,7 +290,7 @@ const GraphOneSeries: React.FC<Props> = ({
 			}
 		}
 
-		dispatch({
+		localDispatch({
 			type: DataSetEnum.SET_DAILY_EXPECTED_DATA,
 			payload: dailyExpectedData
 		})
@@ -255,7 +318,7 @@ const GraphOneSeries: React.FC<Props> = ({
 			}
 		}
 
-		dispatch({
+		localDispatch({
 			type: DataSetEnum.SET_DAILY_DISCREPANCY_DATA,
 			payload: dailyDiscrepancyData
 		})
@@ -286,7 +349,7 @@ const GraphOneSeries: React.FC<Props> = ({
 			cumulativeDiscrepancyData.push(point(days[dayIdx], 'pm', discrepancy, (dayIdx * STEP) + 2, 'Cumulative Discrepancy: '))
 		}
 
-		dispatch({
+		localDispatch({
 			type: DataSetEnum.SET_CUMULATIVE_DISCREPANCY_DATA,
 			payload: cumulativeDiscrepancyData
 		})
@@ -324,7 +387,46 @@ const GraphOneSeries: React.FC<Props> = ({
 		setHintValue(e)
 	}
 
-	const handleMouseLeave = () => setHintValue(null)
+	const handleCrosshairChange = (datapoint: any) => {
+		const { x } = datapoint
+		dispatch(crosshairPositionSet(x))
+	}
+
+	useEffect(() => {
+		const newCrosshairData: CrosshairValue = {}
+
+		const filter = (each: OneSeriesPoint) => each.x === crosshairPosition
+
+		const count = dataSets.parsedData.find(filter)
+		const sales = dataSets.salesData.find(filter)
+		const dailyExpected = dataSets.dailyExpectedData.find(filter)
+		const dailyDiscrep = dataSets.dailyDiscrepancyData.find(filter)
+		const cumulativeExpect = dataSets.cumulativeExpectedData.find(filter)
+		const cumulativeDiscrep = dataSets.cumulativeDiscrepancyData.find(filter)
+
+		newCrosshairData.count = count
+		if (SHOW_SALES && sales) newCrosshairData.sales = sales
+		if (SHOW_DAILY_EXPECTED && dailyExpected) newCrosshairData.dailyExpected = dailyExpected
+		if (SHOW_DAILY_DISCREP && dailyDiscrep) newCrosshairData.dailyDiscrepancy = dailyDiscrep
+		if (SHOW_CUMULATIVE_EXPECTED && cumulativeExpect) newCrosshairData.cumulativeExpected = cumulativeExpect
+		if (SHOW_CUMULATIVE_DISCREP && cumulativeDiscrep) newCrosshairData.cumulativeDiscrepancy = cumulativeDiscrep
+
+		setCrosshairValue(newCrosshairData)
+	}, [
+		SHOW_SALES,
+		SHOW_DAILY_EXPECTED,
+		SHOW_DAILY_DISCREP,
+		SHOW_CUMULATIVE_DISCREP,
+		SHOW_CUMULATIVE_EXPECTED,
+		crosshairPosition,
+		dataSets
+	])
+
+	const handleMouseLeave = () => {
+		setHintValue(null)
+		setCrosshairValue(null)
+		dispatch(crosshairReset())
+	}
 
 	if (dataSets.parsedData.length === 0) {
 		return (
@@ -334,11 +436,20 @@ const GraphOneSeries: React.FC<Props> = ({
 		)
 	}
 
+	// const crosshairSeriesStyle: CSSProperties = {
+	// 	margin: '2px',
+	// 	whiteSpace: 'nowrap',
+	// }
+	const crosshairSeriesStyle = css({
+		margin: '2px',
+		whiteSpace: 'nowrap',
+	})
+
 	return (
 		<div
-			style={{
+			css={css({
 				position: 'relative'
-			}}
+			})}
 		>
 			<h3>
 				{
@@ -349,6 +460,7 @@ const GraphOneSeries: React.FC<Props> = ({
 				width={WIDTH}
 				height={HEIGHT}
 				onMouseLeave={handleMouseLeave}
+				// animation={true}
 				style={{
 					// position: 'relative'
 				}}
@@ -396,6 +508,7 @@ const GraphOneSeries: React.FC<Props> = ({
 					<LineSeries 
 						data={dataSets.parsedData}
 						color={colours.count}
+						
 					/>
 				}
 				{
@@ -446,11 +559,62 @@ const GraphOneSeries: React.FC<Props> = ({
 						onValueMouseOver={handleMarkMouseOver}
 					/>
 				}
+				<MarkSeries 
+					data={dataSets.parsedData}
+					color={'rgba(0,0,0,0)'}
+					// onValueMouseOver={handleMarkMouseOver}
+					style={{
+						pointerEvents: 'none'
+					}}
+					onNearestX={handleCrosshairChange}
+				/>
 				{
 					(hintValue !== null) && 
 					<Hint 
 						value={hintValue} 
-					/>
+					>
+						<div
+							css={tooltipStyle}
+						>
+							{/* @ts-ignore */}
+							<p css={css({margin: '0'})}>{hintValue.label}</p>
+							{/* @ts-ignore */}
+							<p css={css({margin: '0'})}>Day: {Math.round(hintValue.x)}</p>
+							{/* @ts-ignore */}
+							<p css={css({margin: '0'})}>Number: {Math.round(hintValue.y)}</p>
+						</div>
+					</Hint>
+				}
+				{
+					(crosshairPosition !== null) && 
+					<Crosshair 
+						values={[{ x: crosshairPosition }]} 
+					>
+						{
+							(crosshairValue !== null) &&
+							<div
+								css={css({
+									...tooltip,
+									transform: 'translateY(-100%)',
+									display: 'flex',
+									flexDirection: 'column',
+								})}
+							>
+								{/* @ts-ignore */}
+								{crosshairValue.count ? <p css={crosshairSeriesStyle}>{`Count: ${crosshairValue.count.y}`}</p> : ''}
+								{/* @ts-ignore */}
+								{crosshairValue.sales ? <p css={crosshairSeriesStyle}>{`Sales: ${crosshairValue.sales.y}`}</p> : ''}
+								{/* @ts-ignore */}
+								{crosshairValue.dailyExpected ? <p css={crosshairSeriesStyle}>{`Expected: ${crosshairValue.dailyExpected.y}`}</p> : ''}
+								{/* @ts-ignore */}
+								{crosshairValue.dailyDiscrep ? <p css={crosshairSeriesStyle}>{`Discrepancy: ${crosshairValue.dailyDiscrep.y}`}</p> : ''}
+								{/* @ts-ignore */}
+								{crosshairValue.cumulativeExpect ? <p css={crosshairSeriesStyle}>{`Cumulative Expected Value: ${crosshairValue.cumulativeExpect.y}`}</p> : ''}
+								{/* @ts-ignore */}
+								{crosshairValue.cumulativeDiscrep ? <p css={crosshairSeriesStyle}>{`Cumulative Discrepancy Value: ${crosshairValue.cumulativeDiscrep.y}`}</p> : ''}
+							</div>
+						}
+					</Crosshair>
 				}
 			</XYPlot>
 		</div>

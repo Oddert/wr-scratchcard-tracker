@@ -18,7 +18,9 @@ const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
 		case ContextAction.SERIES_DATA_UPDATE_SALES: return reduceSeriesDataUpdateSales(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_ADDITIONS: return reduceSeriesDataUpdateAdditions(state, action)
 		case ContextAction.SERIES_SLOT_UPDATE: return reduceSeriesSlotUpdate(state, action)
-		case ContextAction.UI_SET_SERIES: return reducerUiSetSeries(state, action)
+		case ContextAction.UI_SET_SERIES: return reduceUiSetSeries(state, action)
+		case ContextAction.UI_SET_CROSSHAIR_POS: return reduceUiCrosshairSet(state, action)
+		case ContextAction.UI_UNSET_CROSSHAIR_POS: return reduceUiCrosshairReset(state, action)
 		default: return state
 	}
 }
@@ -131,7 +133,7 @@ function reduceSeriesDataUpdateAdditions (state: ContextStateType, action: Conte
 	}
 }
 
-function reducerUiSetSeries (state: ContextStateType, action: ContextActionType): ContextStateType {
+function reduceUiSetSeries (state: ContextStateType, action: ContextActionType): ContextStateType {
 	return {
 		...state,
 		ui: {
@@ -143,4 +145,25 @@ function reducerUiSetSeries (state: ContextStateType, action: ContextActionType)
 		}
 	}
 }
+
+function reduceUiCrosshairSet (state: ContextStateType, action: ContextActionType): ContextStateType {
+	return {
+		...state,
+		ui: {
+			...state.ui,
+			crosshairPosition: action.payload
+		}
+	}
+}
+
+function reduceUiCrosshairReset (state: ContextStateType, action: ContextActionType): ContextStateType {
+	return {
+		...state,
+		ui: {
+			...state.ui,
+			crosshairPosition: null
+		}
+	}
+}
+
 export default ContextReducer

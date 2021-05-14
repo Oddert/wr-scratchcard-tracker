@@ -144,3 +144,16 @@ export const seriesDataUpdateAdditions = (seriesIdx: number | string, value: num
 		}
 	}
 }
+
+export const crosshairPositionSet = (x: number) => {
+	return {
+		type: ContextAction.UI_SET_CROSSHAIR_POS,
+		payload: x
+	}
+}
+
+export const crosshairReset = () => {
+	return {
+		type: ContextAction.UI_UNSET_CROSSHAIR_POS
+	}
+}

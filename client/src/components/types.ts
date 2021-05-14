@@ -51,6 +51,7 @@ export interface UIStateType {
 		default: ColourSets
 	}
 	selectedColours: ColourSets
+	crosshairPosition: null | number
 }
 
 export interface ContextStateType {
@@ -80,6 +81,8 @@ export enum ContextAction {
 	SERIES_DATA_UPDATE_SALES = 'SERIES_DATA_UPDATE_SALES',
 
 	UI_SET_SERIES = 'UI_SET_SERIES',
+	UI_SET_CROSSHAIR_POS = 'UI_SET_CROSSHAIR_POS',
+	UI_UNSET_CROSSHAIR_POS = 'UI_UNSET_CROSSHAIR_POS',
 }
 
 export interface ContextActionType {
