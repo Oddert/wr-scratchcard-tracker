@@ -607,11 +607,11 @@ const tooltipStyle = css({
 								{/* @ts-ignore */}
 								{crosshairValue.dailyExpected ? <p css={crosshairSeriesStyle}>{`Expected: ${crosshairValue.dailyExpected.y}`}</p> : ''}
 								{/* @ts-ignore */}
-								{crosshairValue.dailyDiscrep ? <p css={crosshairSeriesStyle}>{`Discrepancy: ${crosshairValue.dailyDiscrep.y}`}</p> : ''}
+								{crosshairValue.dailyDiscrepancy ? <p css={crosshairSeriesStyle}>{`Discrepancy: ${crosshairValue.dailyDiscrepancy.y}`}</p> : ''}
 								{/* @ts-ignore */}
-								{crosshairValue.cumulativeExpect ? <p css={crosshairSeriesStyle}>{`Cumulative Expected Value: ${crosshairValue.cumulativeExpect.y}`}</p> : ''}
+								{crosshairValue.cumulativeExpected ? <p css={crosshairSeriesStyle}>{`Cumulative Expected Value: ${crosshairValue.cumulativeExpected.y}`}</p> : ''}
 								{/* @ts-ignore */}
-								{crosshairValue.cumulativeDiscrep ? <p css={crosshairSeriesStyle}>{`Cumulative Discrepancy Value: ${crosshairValue.cumulativeDiscrep.y}`}</p> : ''}
+								{crosshairValue.cumulativeDiscrepancy ? <p css={crosshairSeriesStyle}>{`Cumulative Discrepancy Value: ${crosshairValue.cumulativeDiscrepancy.y}`}</p> : ''}
 							</div>
 						}
 					</Crosshair>

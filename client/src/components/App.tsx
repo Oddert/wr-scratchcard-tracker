@@ -4,12 +4,9 @@ import React, {
 } from 'react'
 import './App.css'
 
-import AddGame from './AddGame'
-import GameLine from './GameLine'
-import AddSeries from './AddSeries'
-import DayControls from './DayControls'
-import CardList from './CardList'
 import Graphs from './Graphs'
+import SideMenu from './SideMenu'
+import DataInput from './DataInput'
 
 import {
 	initialContextState,
@@ -18,7 +15,6 @@ import {
 import ContextReducer from './Reducer'
 
 import { 
-	Series, 
 	ContextStateType, 
 	ContextActionType 
 } from './types'
@@ -39,10 +35,7 @@ const App: React.FC = () => {
 					minHeight: '100vh',
 				}}
 			>
-				<div>
-					<AddGame />
-					<CardList />
-				</div>
+				<SideMenu />
 				<div
 					style={{
 						display: 'flex',
@@ -51,32 +44,7 @@ const App: React.FC = () => {
 						alignItems: 'center',
 					}}
 				>
-					<DayControls />
-					<p>New Count</p>
-					<table>
-						<thead>
-							<tr>
-								<th>Slot Number</th>
-								<th>Game</th>
-								<th>AM Count</th>
-								<th>Additions</th>
-								<th>PM Count</th>
-								<th>Sales (VBS)</th>
-							</tr>
-						</thead>
-						<tbody>
-							{
-								state.series.map((each: Series, idx: number) => 
-									<GameLine 
-										key={idx}
-										gameId={each.gameId}
-										idx={idx}
-									/>
-								)
-							}
-						</tbody>
-					</table>
-					<AddSeries />
+					<DataInput />
 					<Graphs />
 				</div>
 			</div>
