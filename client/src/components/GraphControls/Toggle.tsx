@@ -1,6 +1,11 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
 import React, { useContext } from 'react'
-import Context from '../Context'
+import { css, jsx } from '@emotion/react'
+
 import { ContextAction } from '../types'
+
+import Context from '../Context'
 
 interface Props {
 	seriesSwitch: string
@@ -15,7 +20,7 @@ const Toggle: React.FC<Props> = ({
 
 	const id = `seriesVisualisationToggle_${seriesSwitch}`
 
-	const upper = (str: string) => {
+	const sanitiseLabel = (str: string) => {
 		return `${str.substring(0,1).toUpperCase()}${str.substring(1)}`
 	}
 
@@ -29,35 +34,49 @@ const Toggle: React.FC<Props> = ({
 		})
 	}
 
-	const w = 25
+	const w = 6
+	const h = 25
 
 	return (
-		<div
+		<li
 			style={{
-				display: 'flex'
+				display: 'flex',
+				position: 'relative',
 			}}
 		>	
 			<div
 				style={{
 					width: `${w}px`,
-					height: `${w}px`,
+					height: `${h}px`,
 					backgroundColor: selectedColours[seriesSwitch],
+					marginRight: 20,
 				}}
 			/>
-			<input 
-				type='checkbox'
-				onChange={handleChange}
-				checked={seriesActive[seriesSwitch]}
-				id={id}
-			/>
-			<label 
-				htmlFor={id}
+			<div
+				css={css({
+					display: 'flex',
+					justifyContent: 'space-between',
+					width: '100%',
+				})}
 			>
-				{
-					upper(seriesSwitch)
-				}
-			</label>
-		</div>
+				<label 
+					htmlFor={id}
+				>
+					{
+						sanitiseLabel(seriesSwitch)
+					}
+				</label>
+				<input 
+					type='checkbox'
+					onChange={handleChange}
+					checked={seriesActive[seriesSwitch]}
+					id={id}
+					css={css({
+						marginLeft: 40,
+					})}
+				/>
+			</div>
+		</li>
 	)
 }
 

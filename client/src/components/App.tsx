@@ -1,11 +1,16 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
 import React, { 
 	useReducer, 
 	Dispatch,
 } from 'react'
+import { css, jsx } from '@emotion/react'
+
 import './App.css'
+import 'font-awesome/css/font-awesome.min.css'
 
 import Graphs from './Graphs'
-import SideMenu from './SideMenu'
+import SideMenu from './SideMenu/'
 import DataInput from './DataInput'
 
 import {
@@ -30,20 +35,22 @@ const App: React.FC = () => {
 		>
 			<div 
 				className="App"
-				style={{
+				css={css({
 					display: 'flex',
 					minHeight: '100vh',
-				}}
+				})}
 			>
 				<SideMenu />
 				<div
-					style={{
+					css={css({
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'center',
 						alignItems: 'center',
-					}}
+						flex: 1,
+					})}
 				>
+					{JSON.stringify(state.series)}
 					<DataInput />
 					<Graphs />
 				</div>

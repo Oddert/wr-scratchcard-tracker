@@ -42,7 +42,12 @@ export const gameRemoveOne = (games: Game[], id: number) => {
 	}
 }
 
-export const gameChangeCard = (series: Series[], seriesIdx: number, gameId: number) => {
+export const gameChangeCard = (series: Series[], seriesIdx: number, updateGameId: number) => {
+	const gameId: number = Number(updateGameId)
+	if (isNaN(gameId)) {
+		console.error(`[gameChangeCard]: Failed to dispatch action, requested game ID is not a number`, {series, seriesIdx, gameId: updateGameId})
+		return {}
+	}
 	const updateSeries = series.map((each: Series, idx: number) => {
 		if (idx === seriesIdx) {
 			return {
@@ -52,7 +57,7 @@ export const gameChangeCard = (series: Series[], seriesIdx: number, gameId: numb
 		} else return each
 	})
 	return {
-		type: ContextAction.GAME_UPDATE_CARD,
+		type: ContextAction.SERIES_UPDATE_CARD,
 		payload: updateSeries,
 	}
 }

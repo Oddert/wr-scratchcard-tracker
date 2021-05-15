@@ -453,7 +453,7 @@ const tooltipStyle = css({
 		>
 			<h3>
 				{
-					game ? `${game.number} - ${game.name}` : ''	
+					game ? `${game.number} - ${game.name} (£${game.price})` : ''	
 				}
 			</h3>
 			<XYPlot

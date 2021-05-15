@@ -17,11 +17,15 @@ const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
 		case ContextAction.SERIES_DATA_UPDATE_PM: return reduceSeriesDataUpdatePM(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_SALES: return reduceSeriesDataUpdateSales(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_ADDITIONS: return reduceSeriesDataUpdateAdditions(state, action)
+		case ContextAction.SERIES_UPDATE_CARD: return reduceSeriesChangeCard(state, action)
 		case ContextAction.SERIES_SLOT_UPDATE: return reduceSeriesSlotUpdate(state, action)
 		case ContextAction.UI_SET_SERIES: return reduceUiSetSeries(state, action)
 		case ContextAction.UI_SET_CROSSHAIR_POS: return reduceUiCrosshairSet(state, action)
 		case ContextAction.UI_UNSET_CROSSHAIR_POS: return reduceUiCrosshairReset(state, action)
-		default: return state
+		default: {
+			console.warn(`Default route taken on reducer for action: [${action.type}]`, state, action)
+			return state
+		}
 	}
 }
 
@@ -130,6 +134,13 @@ function reduceSeriesDataUpdateAdditions (state: ContextStateType, action: Conte
 	return {
 		...state,
 		series
+	}
+}
+
+function reduceSeriesChangeCard (state: ContextStateType, action: ContextActionType): ContextStateType {
+	return {
+		...state,
+		series: action.payload,
 	}
 }
 

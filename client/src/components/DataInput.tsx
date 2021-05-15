@@ -21,7 +21,7 @@ const DataInput: React.FC = () => {
 			<table>
 				<thead>
 					<tr>
-						<th>Slot Number</th>
+						{/* <th>Slot Number</th> */}
 						<th>Game</th>
 						<th>AM Count</th>
 						<th>Additions</th>

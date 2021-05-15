@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
-import Context from './Context'
+import Context from '../Context'
 
 import {
 	gameAddOne,
-} from './Actions'
+} from '../Actions'
 
 interface Props {
 	// addGame: (name: string, number: number, price: number) => any

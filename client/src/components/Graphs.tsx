@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import Context from './Context'
-import GraphControls from './GraphControls'
 
 import GraphOneSeries from './GraphOneSeries'
 import { initialContextState } from './Utils'
@@ -11,19 +10,14 @@ const Graphs: React.FC<Props> = () => {
 	const { state }: { state: typeof initialContextState } = useContext(Context)
 	return (
 		<div>
-			<GraphControls 
-			
-			/>
-			<div>
-				{
-					state.series.map((each: any, idx: number) => 
-						<GraphOneSeries
-							key={idx}
-							seriesIdx={idx}
-						/>
-					)
-				}
-			</div>
+			{
+				state.series.map((each: any, idx: number) => 
+					<GraphOneSeries
+						key={idx}
+						seriesIdx={idx}
+					/>
+				)
+			}
 		</div>
 	)
 }

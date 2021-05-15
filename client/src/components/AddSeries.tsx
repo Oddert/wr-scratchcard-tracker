@@ -23,7 +23,7 @@ const AddSeries: React.FC<Props> = () => {
 		>
 			<select
 				value={game}
-				onChange={(e: any) => setGame(e.target.value)}
+				onChange={(e: any) => setGame(Number(e.target.value))}
 			>
 				{
 					state.games.map((each: Game) => 
