@@ -16,7 +16,7 @@
 		"install_all": "npm run server_install && npm run client_install",
 
 		"ts_lint": "tslint -c tslint.json -p tsconfig.json --fix",
-		"ts_watch": "tsc --w",
+		"ts_watch": "tsc -w",
 		"ts_build": "tsc",
 		"server_auto_restart": "nodemon dist/js/index.js",
 		"client_build": "cd client && npm run build",

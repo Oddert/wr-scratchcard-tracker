@@ -1,0 +1,4 @@
+- remove the additions column from between the am & pm
+- can we create a 'current list' type interface?
+- why have multiple series of same game? this forces positional based data
+- seperate menu for sales input
