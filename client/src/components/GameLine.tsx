@@ -10,7 +10,7 @@ import {
 	seriesDataUpdateAM,
 	seriesDataUpdatePM,
 	seriesDataUpdateSales,
-	seriesUpdateSlot,
+	// seriesUpdateSlot,
 } from './Actions'
 
 import Context from './Context'
@@ -27,7 +27,7 @@ const GameLine: React.FC<Props> = ({
 	const { state, dispatch } = useContext(Context)
 
 	const data = state.series[idx].data
-	const slot = state.series[idx].slot
+	// const slot = state.series[idx].slot
 
 	const { am, pm, add, sales } = data[state.day]
 

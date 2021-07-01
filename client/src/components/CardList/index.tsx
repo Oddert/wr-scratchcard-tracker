@@ -10,6 +10,7 @@ import {
 import Context from '../Context'
 
 import Card from './Card'
+import AddGame from '../AddGame'
 
 const CardList: React.FC = () => {
 	const { state } = useContext(Context)
@@ -28,8 +29,9 @@ const CardList: React.FC = () => {
 					textAlign: 'left',
 				})}
 			>
-				Filter
+				Games
 			</h3>
+			<AddGame />
 			<ul
 				css={css({
 					textAlign: 'left',

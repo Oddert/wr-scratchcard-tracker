@@ -16,42 +16,42 @@ export const initialSeriesData: SeriesData[] = [
 ]
 
 const testData: SeriesData[][] = [
+	// [
+	// 	{ am: 15, add: 0, pm: 15, sales: 0 },
+	// 	{ am: 14, add: 0, pm: 14, sales: 5 },
+	// 	{ am: 15, add: 0, pm: 14, sales: 0 },
+	// 	{ am: 14, add: 0, pm: 7, sales: 30 },
+	// 	{ am: 7, add: 0, pm: 6, sales: 5 },
+	// 	{ am: 7, add: 16, pm: 22, sales: 0 },
+	// 	{ am: 22, add: 0, pm: 22, sales: 0 },
+	// ],
 	[
-		{ am: 15, add: 0, pm: 15, sales: 0 },
-		{ am: 14, add: 0, pm: 14, sales: 5 },
-		{ am: 15, add: 0, pm: 14, sales: 0 },
-		{ am: 14, add: 0, pm: 7, sales: 30 },
-		{ am: 7, add: 0, pm: 6, sales: 5 },
-		{ am: 7, add: 16, pm: 22, sales: 0 },
-		{ am: 22, add: 0, pm: 22, sales: 0 },
+		{ am: 0, add: 14, pm: 4, sales: 50 },
+		{ am: 4, add: 0, pm: 0, sales: 20 },
+		{ am: 0, add: 20, pm: 20, sales: 0 },
+		{ am: 20, add: 0, pm: 15, sales: 25 },
+		{ am: 15, add: 0, pm: 10, sales: 25 },
+		{ am: 10, add: 20, pm: 21, sales: 40 },
+		{ am: 21, add: 0, pm: 11, sales: 50 },
 	],
-	// [
-	// 	{ am: 0, add: 14, pm: 4, sales: 50 },
-	// 	{ am: 4, add: 0, pm: 0, sales: 20 },
-	// 	{ am: 0, add: 20, pm: 20, sales: 0 },
-	// 	{ am: 20, add: 0, pm: 15, sales: 25 },
-	// 	{ am: 15, add: 0, pm: 10, sales: 25 },
-	// 	{ am: 10, add: 20, pm: 21, sales: 40 },
-	// 	{ am: 21, add: 0, pm: 11, sales: 50 },
-	// ],
-	// [
-	// 	{ am: 0, add: 20, pm: 20, sales: 0 },
-	// 	{ am: 20, add: 0, pm: 18, sales: 10 },
-	// 	{ am: 18, add: 0, pm: 16, sales: 10 },
-	// 	{ am: 16, add: 0, pm: 15, sales: 5 },
-	// 	{ am: 15, add: 0, pm: 14, sales: 10 },
-	// 	{ am: 13, add: 10, pm: 19, sales: 20 },
-	// 	{ am: 19, add: 0, pm: 19, sales: 0 },
-	// ],
-	// [
-	// 	{ am: 12, add: 10, pm: 22, sales: 0 },
-	// 	{ am: 22, add: 0, pm: 20, sales: 10 },
-	// 	{ am: 20, add: 0, pm: 19, sales: 5 },
-	// 	{ am: 19, add: 0, pm: 13, sales: 30 },
-	// 	{ am: 13, add: 0, pm: 10, sales: 20 },
-	// 	{ am: 9, add: 14, pm: 20, sales: 20 },
-	// 	{ am: 20, add: 0, pm: 19, sales: 5 },
-	// ]
+	[
+		{ am: 0, add: 20, pm: 20, sales: 0 },
+		{ am: 20, add: 0, pm: 18, sales: 10 },
+		{ am: 18, add: 0, pm: 16, sales: 10 },
+		{ am: 16, add: 0, pm: 15, sales: 5 },
+		{ am: 15, add: 0, pm: 14, sales: 10 },
+		{ am: 13, add: 10, pm: 19, sales: 20 },
+		{ am: 19, add: 0, pm: 19, sales: 0 },
+	],
+	[
+		{ am: 12, add: 10, pm: 22, sales: 0 },
+		{ am: 22, add: 0, pm: 20, sales: 10 },
+		{ am: 20, add: 0, pm: 19, sales: 5 },
+		{ am: 19, add: 0, pm: 13, sales: 30 },
+		{ am: 13, add: 0, pm: 10, sales: 20 },
+		{ am: 9, add: 14, pm: 20, sales: 20 },
+		{ am: 20, add: 0, pm: 19, sales: 5 },
+	]
 ]
 
 export const initialContextState: ContextStateType = {
@@ -103,8 +103,8 @@ export const initialContextState: ContextStateType = {
 	],
 	series: [
 		{ gameId: 0, fromDay: 0, toDay: 6, slot: 1, data: testData[0] }, 
-		// { gameId: 1, fromDay: 0, toDay: 6, slot: 2, data: testData[1] },
-		// { gameId: 3, fromDay: 0, toDay: 6, slot: 3, data: testData[2] },
+		{ gameId: 1, fromDay: 0, toDay: 6, slot: 2, data: testData[1] },
+		{ gameId: 3, fromDay: 0, toDay: 6, slot: 3, data: testData[2] },
 	],
 	day: 0,
 	days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],

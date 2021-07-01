@@ -6,6 +6,7 @@ import {
 } from './types'
 
 const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
+	console.log(state, action)
 	switch (action.type) {
 		case ContextAction.GAME_ADD_ONE: return reduceGameAddOne(state, action)
 		case ContextAction.GAME_REMOVE_ONE: return reduceGameRemoveOne(state, action)

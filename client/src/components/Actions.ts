@@ -13,9 +13,11 @@ export const gameAddOne = (games: Game[], name: string, number: number, price: n
 	}, true)
 
 	if (!accept) return 
+
+	const largestId = Math.max(...games.map(e => e.id))
 	
 	const newGame: Game = {
-		id: games.length + 1,
+		id: largestId + 1,
 		name,
 		number,
 		price,

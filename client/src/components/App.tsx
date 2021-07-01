@@ -50,7 +50,6 @@ const App: React.FC = () => {
 						flex: 1,
 					})}
 				>
-					{JSON.stringify(state.series)}
 					<DataInput />
 					<Graphs />
 				</div>
