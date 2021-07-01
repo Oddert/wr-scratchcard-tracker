@@ -5,6 +5,8 @@ import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
+import coreRoutes from './routes/coreRoutes'
+
 const env = dotenv.config()
 
 const PORT = process.env.PORT || 5000
@@ -21,7 +23,9 @@ if (process.env.MODE === "development") {
 	app.use(morgan('dev'))
 }
 
-const timestamp = Date.now().toLocaleString()
+app.use('/', coreRoutes)
+
+const timestamp = new Date().toLocaleString()
 
 const confirmStart = () => console.log(`${timestamp}: Server initialised on PORT ${PORT}...`)
 

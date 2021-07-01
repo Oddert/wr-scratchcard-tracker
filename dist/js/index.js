@@ -28,6 +28,7 @@ var path_1 = __importDefault(require("path"));
 var morgan_1 = __importDefault(require("morgan"));
 var cors_1 = __importDefault(require("cors"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
+var coreRoutes_1 = __importDefault(require("./routes/coreRoutes"));
 var env = dotenv.config();
 var PORT = process.env.PORT || 5000;
 var app = express_1.default();
@@ -39,6 +40,7 @@ app.use(cors_1.default());
 if (process.env.MODE === "development") {
     app.use(morgan_1.default('dev'));
 }
+app.use('/', coreRoutes_1.default);
 var timestamp = Date.now().toLocaleString();
 var confirmStart = function () { return console.log(timestamp + ": Server initialised on PORT " + PORT + "..."); };
 var server = app.listen(PORT, confirmStart);
