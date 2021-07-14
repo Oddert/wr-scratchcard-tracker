@@ -9,7 +9,7 @@ import {
 import Context from './Context'
 
 import DayControls from './DayControls'
-import GameLine from './GameLine'
+import GameLine from './GameLine/'
 import AddSeries from './AddSeries'
 
 const DataInput: React.FC = () => {
@@ -24,9 +24,10 @@ const DataInput: React.FC = () => {
 						{/* <th>Slot Number</th> */}
 						<th>Game</th>
 						<th>AM Count</th>
-						<th>Additions</th>
 						<th>PM Count</th>
+						<th>Additions</th>
 						<th>Sales (VBS)</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>

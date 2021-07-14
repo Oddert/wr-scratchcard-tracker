@@ -41,7 +41,7 @@ if (process.env.MODE === "development") {
     app.use(morgan_1.default('dev'));
 }
 app.use('/', coreRoutes_1.default);
-var timestamp = Date.now().toLocaleString();
+var timestamp = new Date().toLocaleString();
 var confirmStart = function () { return console.log(timestamp + ": Server initialised on PORT " + PORT + "..."); };
 var server = app.listen(PORT, confirmStart);
 //# sourceMappingURL=index.js.map

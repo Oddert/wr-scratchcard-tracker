@@ -102,6 +102,13 @@ export const seriesAddOne = (gameId: number, fromDay?: number, toDay?: number, s
 	}
 }
 
+export const seriesRemoveOne = (idx: number) => {
+	return {
+		type: ContextAction.SERIES_REMOVE_ONE,
+		payload: idx
+	}
+}
+
 export const seriesUpdateSlot = (seriesIdx: number | string, slot: number | string) => {
 	return {
 		type: ContextAction.SERIES_SLOT_UPDATE,

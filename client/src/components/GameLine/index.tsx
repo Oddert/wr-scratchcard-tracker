@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 
 import { 
 	Game,
-} from './types'
+} from '../types'
 
 import {
 	gameChangeCard,
@@ -11,9 +11,11 @@ import {
 	seriesDataUpdatePM,
 	seriesDataUpdateSales,
 	// seriesUpdateSlot,
-} from './Actions'
+} from '../Actions'
 
-import Context from './Context'
+import Context from '../Context'
+
+import Delete from './Delete'
 
 interface Props {
 	idx: number
@@ -32,6 +34,7 @@ const GameLine: React.FC<Props> = ({
 	const { am, pm, add, sales } = data[state.day]
 
 	return (
+		<>
 		<tr>
 			{/* <td>
 				<input 
@@ -69,17 +72,17 @@ const GameLine: React.FC<Props> = ({
 			<td>
 				<input 
 					type='number' 
-					placeholder='additions' 
-					value={add} 
-					onChange={((e: any) => dispatch(seriesDataUpdateAdditions(idx, e.target.value)))}
+					placeholder='PM Count' 
+					value={pm} 
+					onChange={((e: any) => dispatch(seriesDataUpdatePM(idx, e.target.value)))}
 				/>
 			</td>
 			<td>
 				<input 
 					type='number' 
-					placeholder='PM Count' 
-					value={pm} 
-					onChange={((e: any) => dispatch(seriesDataUpdatePM(idx, e.target.value)))}
+					placeholder='additions' 
+					value={add} 
+					onChange={((e: any) => dispatch(seriesDataUpdateAdditions(idx, e.target.value)))}
 				/>
 			</td>
 			<td>
@@ -90,7 +93,14 @@ const GameLine: React.FC<Props> = ({
 					onChange={((e: any) => dispatch(seriesDataUpdateSales(idx, e.target.value)))}
 				/>
 			</td>
+			{/* TODO: add delete */}
+			<td>
+				<Delete 
+					idx={idx as number}
+				/>
+			</td>
 		</tr>
+		</>
 	)
 }
 

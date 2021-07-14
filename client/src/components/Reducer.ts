@@ -14,6 +14,7 @@ const ContextReducer = (state: ContextStateType, action: ContextActionType) => {
 		case ContextAction.DAY_INCREMENT: return reduceDayInc(state, action)
 		case ContextAction.DAY_DECREMENT: return reduceDayDec(state, action)
 		case ContextAction.SERIES_ADD_ONE: return reduceSeriesAddOne(state, action)
+		case ContextAction.SERIES_REMOVE_ONE: return reduceSerieseRemoveOne(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_AM: return reduceSeriesDataUpdateAM(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_PM: return reduceSeriesDataUpdatePM(state, action)
 		case ContextAction.SERIES_DATA_UPDATE_SALES: return reduceSeriesDataUpdateSales(state, action)
@@ -76,6 +77,15 @@ function reduceSeriesAddOne (state: ContextStateType, action: ContextActionType)
 			...state.series,
 			action.payload
 		]
+	}
+}
+
+function reduceSerieseRemoveOne (state: ContextStateType, action: ContextActionType): ContextStateType {
+	const first = state.series.slice(0, action.payload)
+	const second = state.series.slice(action.payload + 1)
+	return {
+		...state,
+		series: first.concat(second)
 	}
 }
 
