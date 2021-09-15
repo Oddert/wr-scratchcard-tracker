@@ -21,7 +21,7 @@ const SideMenu: React.FC = () => {
 					top: '0px',
 					maxHeight: '100vh',
 					overflowY: 'auto',
-					padding: '0px 30px',
+					padding: '0px 30px', 
 				})}
 			>
 				<GraphControls />

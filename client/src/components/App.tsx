@@ -39,6 +39,7 @@ const App: React.FC = () => {
 					display: 'flex',
 					minHeight: '100vh',
 				})}
+				data-testid='container'
 			>
 				<SideMenu />
 				<div
